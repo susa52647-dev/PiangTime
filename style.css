@@ -1,0 +1,361 @@
+body{
+margin:0;
+font-family:'Quicksand', sans-serif;
+background:#fffafc;
+}
+
+header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:20px;
+background:white;
+border-bottom:1px solid #eee;
+}
+
+nav a{
+margin-left:20px;
+text-decoration:none;
+color:#444;
+font-weight:500;
+transition:0.3s;
+}
+
+nav a:hover{
+color:#ff7aa2;
+}
+
+.hero{
+    height: 90vh;
+    background-image: url("BG.jpg");
+    background-size: cover;
+    background-position: center;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.hero::before{
+content:"";
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.35);
+backdrop-filter:blur(2px);
+}
+.hero-text{
+position:relative;
+z-index:1;
+}
+
+.memories{
+padding:60px 20px;
+text-align:center;
+background:#fff5f7;
+}
+
+.memories h2{
+font-size:36px;
+margin-bottom:40px;
+}
+
+.memory-container{
+display:flex;
+justify-content:center;
+gap:30px;
+flex-wrap:wrap;
+max-width:900px;
+margin:auto;
+}
+
+.memory-card{
+background:white;
+padding:15px;
+border-radius:14px;
+box-shadow:0 8px 25px rgba(0,0,0,0.08);
+transition:0.3s;
+max-width:260px;
+}
+
+.memory-card:hover{
+transform:translateY(-8px);
+box-shadow:0 15px 35px rgba(0,0,0,0.15);
+}
+
+.memory-card img{
+width:100%;
+border-radius:10px;
+margin-bottom:10px;
+}
+
+
+.add-memory{
+text-align:center;
+padding:40px;
+background:#fff0f5;
+}
+
+.add-memory input,
+.add-memory textarea{
+display:block;
+margin:10px auto;
+padding:10px;
+width:300px;
+border-radius:8px;
+border:1px solid #ddd;
+}
+
+.add-memory button{
+padding:12px 22px;
+background:#ff7aa2;
+color:white;
+border:none;
+border-radius:25px;
+cursor:pointer;
+font-weight:600;
+transition:0.3s;
+}
+
+.add-memory button:hover{
+background:#ff5c8a;
+transform:scale(1.05);
+}
+
+html{
+scroll-behavior:smooth;
+}
+
+.message{
+text-align:center;
+padding:60px 20px;
+background:#fff5f7;
+}
+
+.message h2{
+font-size:32px;
+margin-bottom:20px;
+}
+
+.message p{
+max-width:600px;
+margin:auto;
+font-size:18px;
+line-height:1.6;
+color:#444;
+}
+
+
+nav a:hover{
+color:#ff7aa2;
+}
+.memory-card button{
+margin:5px;
+padding:6px 12px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+}
+
+.memory-card button:first-of-type{
+background:#ffc107;
+color:white;
+}
+
+.memory-card button:last-of-type{
+background:#ff6b6b;
+color:white;
+}
+
+.memory-buttons{
+display:none;
+margin-top:10px;
+}
+
+.memory-buttons.show{
+display:block;
+}
+
+.memory-buttons button{
+margin:5px;
+padding:6px 12px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+}
+
+.memory-buttons button:first-child{
+background:#ffc107;
+color:white;
+}
+
+.memory-buttons button:last-child{
+background:#ff6b6b;
+color:white;
+}
+.memory-card img{
+cursor:pointer;
+}
+.memory-card:hover img{
+transform:scale(1.05);
+}
+
+#imageViewer{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.8);
+display:none;
+justify-content:center;
+align-items:center;
+z-index:1000;
+}
+
+#viewerImage{
+max-width:90%;
+max-height:90%;
+border-radius:10px;
+}
+
+.fade-in{
+opacity:0;
+transform:translateY(20px);
+animation:fadeIn 0.8s ease forwards;
+}
+
+@keyframes fadeIn{
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+#lockScreen{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:#fffafc;
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:2000;
+}
+
+.lock-box{
+background:white;
+padding:40px;
+border-radius:12px;
+box-shadow:0 10px 30px rgba(0,0,0,0.1);
+text-align:center;
+}
+
+.lock-box input{
+padding:10px;
+margin-top:10px;
+width:200px;
+border-radius:6px;
+border:1px solid #ddd;
+}
+
+.lock-box button{
+margin-top:15px;
+padding:8px 16px;
+background:#ff7aa2;
+border:none;
+color:white;
+border-radius:6px;
+cursor:pointer;
+}
+
+section{
+border-bottom:1px solid #f1f1f1;
+}
+
+#heartContainer{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+pointer-events:none;
+overflow:hidden;
+z-index:1500;
+}
+
+.heart{
+position:absolute;
+color:#ff7aa2;
+font-size:20px;
+animation:floatHeart 3s linear forwards;
+}
+
+@keyframes floatHeart{
+
+0%{
+transform:translateY(0) scale(1);
+opacity:1;
+}
+
+100%{
+transform:translateY(-600px) scale(1.5);
+opacity:0;
+}
+
+}
+
+function createHearts(){
+
+let container = document.getElementById("heartContainer")
+
+for(let i=0;i<25;i++){
+
+let heart = document.createElement("div")
+
+heart.className="heart"
+heart.innerHTML="❤"
+
+heart.style.left = Math.random()*100 + "vw"
+heart.style.bottom = "0px"
+heart.style.fontSize = (Math.random()*20+15) + "px"
+
+container.appendChild(heart)
+
+setTimeout(()=>{
+heart.remove()
+},3000)
+
+}
+
+}
+button{
+transition:0.3s;
+}
+
+button:hover{
+transform:scale(1.05);
+}
+
+.container{
+max-width:1100px;
+margin:auto;
+padding:0 20px;
+}
+.hero-text{
+animation:fadeHero 1.5s ease;
+}
+
+@keyframes fadeHero{
+from{
+opacity:0;
+transform:translateY(30px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
