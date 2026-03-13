@@ -16,9 +16,8 @@ border-bottom:1px solid #eee;
 nav a{
 margin-left:20px;
 text-decoration:none;
-color:#444;
-font-weight:500;
-transition:0.3s;
+color:#333;
+font-weight:600;
 }
 
 nav a:hover{
@@ -26,21 +25,41 @@ color:#ff7aa2;
 }
 
 .hero{
-    height:100vh;
-    background-size:cover;
-    position:relative;   /* เพิ่ม */
-    overflow:hidden;     /* เพิ่ม */
+height:100vh;
+background-size:cover;
+background-position:center; /* เพิ่ม */
+position:relative;
+overflow:hidden;
+display:flex;               /* เพิ่ม */
+align-items:center;         /* เพิ่ม */
 }
 
 .hero::before{
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: rgba(0,0,0,0.35);
+content:"";
+position:absolute;
+inset:0;
+background:linear-gradient(
+rgba(0,0,0,0.25),
+rgba(0,0,0,0.45)
+);
 }
+
 .hero-text{
 position:relative;
 z-index:1;
+color:white; /* เพิ่ม */
+text-shadow:0 3px 12px rgba(0,0,0,0.7); /* เพิ่ม */
+max-width:600px; /* เพิ่ม */
+}
+
+.hero h1{
+font-size:48px;
+margin-bottom:10px;
+}
+
+.hero p{
+font-size:18px;
+color:#f1f1f1;
 }
 
 .memories{
@@ -380,10 +399,5 @@ font-size:14px;
 max-width:300px;
 }
 
-}
-
-.hero{
-background-size:cover;
-background-position:center;
 }
 
