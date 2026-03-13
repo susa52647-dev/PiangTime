@@ -26,12 +26,13 @@ color:#ff7aa2;
 
 .hero{
 height:100vh;
+background-image:url("BG.jpg"); /* เพิ่มตรงนี้ */
 background-size:cover;
-background-position:center; /* เพิ่ม */
+background-position:center;
 position:relative;
 overflow:hidden;
-display:flex;               /* เพิ่ม */
-align-items:center;         /* เพิ่ม */
+display:flex;
+align-items:center;
 }
 
 .hero::before{
@@ -400,4 +401,5 @@ max-width:300px;
 }
 
 }
+
 
