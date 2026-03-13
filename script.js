@@ -12,7 +12,7 @@ function checkPassword(){
 
 const pass=document.getElementById("passwordInput").value
 
-if(pass==="1234"){
+if(pass==="Tumpihungry"){
 document.getElementById("lockScreen").style.display="none"
 loadMemories()
 }else{
@@ -234,3 +234,4 @@ heart.remove()
 },3000)
 
 },800)
+
