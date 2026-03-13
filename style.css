@@ -26,7 +26,7 @@ color:#ff7aa2;
 
 .hero{
 height:100vh;
-background-image:url("BG.jpg"); /* ใส่ตรงนี้ */
+background-image:url("./BG.jpg"); /* ใส่ตรงนี้ */
 background-size:cover;
 background-position:center;
 position:relative;
@@ -401,6 +401,7 @@ max-width:300px;
 }
 
 }
+
 
 
 
