@@ -3,21 +3,64 @@ const supabaseUrl = "https://mjgazsuzgcmigsoqfpka.supabase.co"
 
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1qcWF6c3V6Z2NtaWdzb3FmcGthIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MDAxMDEsImV4cCI6MjA4ODk3NjEwMX0.diKc0JKRowJ7LzSQhsS6ZOuAD6xwr8HN62i4jGinOxQ"
 
-const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey)
+let supabaseClient = null
+
+// โหลด Supabase หลังหน้าเว็บเปิด
+document.addEventListener("DOMContentLoaded", () => {
+
+if(window.supabase){
+
+supabaseClient = supabase.createClient(supabaseUrl, supabaseKey)
+
+}
+
+loadMemories()
+
+setupEnterKey()
+
+})
 
 
 
 // PASSWORD
 function checkPassword(){
 
-let pass = document.getElementById("passwordInput").value.trim()
+let input = document.getElementById("passwordInput")
+
+if(!input) return
+
+let pass = input.value.trim()
 
 if(pass === "Tumpihungry"){
-document.getElementById("lockScreen").style.display="none"
-}
-else{
+
+let lock = document.getElementById("lockScreen")
+
+if(lock) lock.style.display="none"
+
+}else{
+
 alert("Wrong password")
+
 }
+
+}
+
+
+
+// ENTER KEY LOGIN
+function setupEnterKey(){
+
+let input=document.getElementById("passwordInput")
+
+if(!input) return
+
+input.addEventListener("keypress",function(e){
+
+if(e.key==="Enter"){
+checkPassword()
+}
+
+})
 
 }
 
@@ -28,16 +71,20 @@ async function uploadImage(){
 
 let input = document.getElementById("imageInput")
 
-if(!input.files.length){
+if(!input || !input.files.length){
+
 alert("กรุณาเลือกรูป")
+
 return null
+
 }
 
 let file = input.files[0]
 
 let formData = new FormData()
-formData.append("file", file)
-formData.append("upload_preset", "memory_upload")
+
+formData.append("file",file)
+formData.append("upload_preset","memory_upload")
 
 try{
 
@@ -55,8 +102,10 @@ return data.secure_url
 
 }catch(err){
 
-console.log(err)
-alert("Upload error")
+console.log("upload error",err)
+
+alert("Upload image error")
+
 return null
 
 }
@@ -68,12 +117,15 @@ return null
 // ADD MEMORY
 async function addMemory(){
 
-let date = document.getElementById("dateInput").value
-let text = document.getElementById("textInput").value
+let date = document.getElementById("dateInput")?.value
+let text = document.getElementById("textInput")?.value
 
 if(!date || !text){
+
 alert("Please fill everything")
+
 return
+
 }
 
 let imageURL = await uploadImage()
@@ -84,16 +136,20 @@ let { error } = await supabaseClient
 .from("memories")
 .insert([
 {
-date: date,
-text: text,
-image: imageURL
+date:date,
+text:text,
+image:imageURL
 }
 ])
 
 if(error){
+
 console.log(error)
+
 alert("Save error")
+
 return
+
 }
 
 document.getElementById("textInput").value=""
@@ -108,14 +164,19 @@ loadMemories()
 // LOAD MEMORIES
 async function loadMemories(){
 
+if(!supabaseClient) return
+
 let { data, error } = await supabaseClient
 .from("memories")
 .select("*")
 .order("date",{ascending:false})
 
 if(error){
+
 console.log(error)
+
 return
+
 }
 
 let container = document.getElementById("memoryContainer")
@@ -126,7 +187,7 @@ container.innerHTML=""
 
 data.forEach(memory=>{
 
-let card = document.createElement("div")
+let card=document.createElement("div")
 
 card.className="memory-card"
 
@@ -159,19 +220,14 @@ container.appendChild(card)
 // DELETE MEMORY
 async function deleteMemory(id){
 
-let confirmDelete = confirm("Are you sure you want to delete this memory?")
+let ok = confirm("Delete this memory?")
 
-if(!confirmDelete) return
+if(!ok) return
 
-let { error } = await supabaseClient
+await supabaseClient
 .from("memories")
 .delete()
 .eq("id",id)
-
-if(error){
-alert("Delete error")
-return
-}
 
 loadMemories()
 
@@ -182,19 +238,22 @@ loadMemories()
 // EDIT IMAGE
 async function editImage(id){
 
-let input = document.createElement("input")
-input.type = "file"
-input.accept = "image/*"
+let input=document.createElement("input")
 
-input.onchange = async ()=>{
+input.type="file"
 
-let file = input.files[0]
+input.accept="image/*"
 
-let formData = new FormData()
-formData.append("file", file)
-formData.append("upload_preset", "memory_upload")
+input.onchange=async()=>{
 
-let res = await fetch(
+let file=input.files[0]
+
+let formData=new FormData()
+
+formData.append("file",file)
+formData.append("upload_preset","memory_upload")
+
+let res=await fetch(
 "https://api.cloudinary.com/v1_1/dtzmwztuj/image/upload",
 {
 method:"POST",
@@ -202,13 +261,11 @@ body:formData
 }
 )
 
-let data = await res.json()
-
-let newURL = data.secure_url
+let data=await res.json()
 
 await supabaseClient
 .from("memories")
-.update({image:newURL})
+.update({image:data.secure_url})
 .eq("id",id)
 
 loadMemories()
@@ -224,65 +281,22 @@ input.click()
 // IMAGE VIEWER
 function openViewer(src){
 
-let viewer = document.getElementById("imageViewer")
-let img = document.getElementById("viewerImage")
+let viewer=document.getElementById("imageViewer")
 
-img.src = src
+let img=document.getElementById("viewerImage")
+
+if(!viewer || !img) return
+
+img.src=src
+
 viewer.style.display="flex"
 
 }
 
 function closeViewer(){
 
-document.getElementById("imageViewer").style.display="none"
+let viewer=document.getElementById("imageViewer")
+
+if(viewer) viewer.style.display="none"
 
 }
-
-
-
-// HEART EFFECT
-function createHearts(){
-
-let container = document.getElementById("heartContainer")
-
-if(!container) return
-
-for(let i=0;i<25;i++){
-
-let heart = document.createElement("div")
-
-heart.className="heart"
-heart.innerHTML="❤"
-
-heart.style.left=Math.random()*100+"vw"
-heart.style.bottom="0px"
-heart.style.fontSize=(Math.random()*20+15)+"px"
-
-container.appendChild(heart)
-
-setTimeout(()=>{
-heart.remove()
-},3000)
-
-}
-
-}
-
-
-
-// ENTER KEY LOGIN
-document.addEventListener("DOMContentLoaded",()=>{
-
-let input = document.getElementById("passwordInput")
-
-if(input){
-input.addEventListener("keypress",(e)=>{
-if(e.key==="Enter"){
-checkPassword()
-}
-})
-}
-
-loadMemories()
-
-})
