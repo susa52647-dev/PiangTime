@@ -1,5 +1,9 @@
 let memories = JSON.parse(localStorage.getItem("memories")) || []
+const supabaseUrl = "https://mjgazsuzgcmigsoqfpka.supabase.co"
 
+const supabaseKey = "sb_publishable_OygNxwvThA3Bw1EATT7VRg_CkJ0KFJp"
+
+const supabase = supabase.createClient(supabaseUrl, supabaseKey)
 // PASSWORD
 function checkPassword(){
 
@@ -154,3 +158,4 @@ heart.remove()
 
 // LOAD MEMORIES WHEN PAGE OPEN
 renderMemories()
+
