@@ -1,5 +1,7 @@
-const supabaseUrl = "https://mjqazsuzgcmigsoqfpka.supabase.co"
-const supabaseKey = "sb_publishable_OygNxwvThA3Bw1EATT7VRg_CkJ0KFJp"
+// SUPABASE
+const supabaseUrl = "https://mjgazsuzgcmigsoqfpka.supabase.co"
+
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1qcWF6c3V6Z2NtaWdzb3FmcGthIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MDAxMDEsImV4cCI6MjA4ODk3NjEwMX0.diKc0JKRowJ7LzSQhsS6ZOuAD6xwr8HN62i4jGinOxQ"
 
 const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey)
 
@@ -31,12 +33,12 @@ alert("กรุณาเลือกรูป")
 return null
 }
 
-try{
-
 let formData = new FormData()
 
 formData.append("file", file)
 formData.append("upload_preset", "memory_upload")
+
+try{
 
 let res = await fetch("https://api.cloudinary.com/v1_1/dtzmwztuj/image/upload",{
 method:"POST",
@@ -47,9 +49,9 @@ let data = await res.json()
 
 return data.secure_url
 
-}catch(err){
+}catch(error){
 
-console.log(err)
+console.log("Upload error:",error)
 alert("Upload image error")
 return null
 
@@ -80,23 +82,24 @@ let { error } = await supabaseClient
 .from("memories")
 .insert([
 {
-date:date,
-text:text,
-image:imageURL
+date: date,
+text: text,
+image: imageURL
 }
 ])
 
 if(error){
+
 console.log(error)
 alert("Save memory error")
 return
+
 }
 
 loadMemories()
 
 document.getElementById("textInput").value=""
 document.getElementById("imageInput").value=""
-document.getElementById("dateInput").value=""
 
 }
 
@@ -143,9 +146,11 @@ container.appendChild(card)
 function openViewer(src){
 
 let viewer=document.getElementById("imageViewer")
+
 let img=document.getElementById("viewerImage")
 
 img.src=src
+
 viewer.style.display="flex"
 
 }
@@ -203,4 +208,3 @@ checkPassword()
 loadMemories()
 
 })
-
