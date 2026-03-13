@@ -1,5 +1,4 @@
 const supabaseUrl = "https://mjgazsuzgcmigsoqfpka.supabase.co"
-
 const supabaseKey = "sb_publishable_OygNxwvThA3Bw1EATT7VRg_CkJ0KFJp"
 
 const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey)
@@ -32,6 +31,8 @@ alert("กรุณาเลือกรูป")
 return null
 }
 
+try{
+
 let formData = new FormData()
 
 formData.append("file", file)
@@ -45,6 +46,14 @@ body:formData
 let data = await res.json()
 
 return data.secure_url
+
+}catch(err){
+
+console.log(err)
+alert("Upload image error")
+return null
+
+}
 
 }
 
@@ -67,7 +76,7 @@ if(!imageURL){
 return
 }
 
-await supabaseClient
+let { error } = await supabaseClient
 .from("memories")
 .insert([
 {
@@ -77,10 +86,17 @@ image:imageURL
 }
 ])
 
+if(error){
+console.log(error)
+alert("Save memory error")
+return
+}
+
 loadMemories()
 
 document.getElementById("textInput").value=""
 document.getElementById("imageInput").value=""
+document.getElementById("dateInput").value=""
 
 }
 
@@ -95,7 +111,7 @@ let { data, error } = await supabaseClient
 .order("date",{ascending:false})
 
 if(error){
-console.log(error)
+console.log("Load error:",error)
 return
 }
 
@@ -127,11 +143,9 @@ container.appendChild(card)
 function openViewer(src){
 
 let viewer=document.getElementById("imageViewer")
-
 let img=document.getElementById("viewerImage")
 
 img.src=src
-
 viewer.style.display="flex"
 
 }
