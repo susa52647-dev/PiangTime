@@ -10,7 +10,7 @@ const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey)
 // PASSWORD
 function checkPassword(){
 
-const pass = document.getElementById("passwordInput").value.trim()
+let pass = document.getElementById("passwordInput").value.trim()
 
 if(pass === "Tumpihungry"){
 document.getElementById("lockScreen").style.display="none"
@@ -26,14 +26,14 @@ alert("Wrong password")
 // UPLOAD IMAGE
 async function uploadImage(){
 
-let fileInput = document.getElementById("imageInput")
+let input = document.getElementById("imageInput")
 
-if(!fileInput.files.length){
+if(!input.files.length){
 alert("กรุณาเลือกรูป")
 return null
 }
 
-let file = fileInput.files[0]
+let file = input.files[0]
 
 let formData = new FormData()
 formData.append("file", file)
@@ -84,9 +84,9 @@ let { error } = await supabaseClient
 .from("memories")
 .insert([
 {
-date:date,
-text:text,
-image:imageURL
+date: date,
+text: text,
+image: imageURL
 }
 ])
 
@@ -96,10 +96,10 @@ alert("Save error")
 return
 }
 
-loadMemories()
-
 document.getElementById("textInput").value=""
 document.getElementById("imageInput").value=""
+
+loadMemories()
 
 }
 
@@ -120,6 +120,8 @@ return
 
 let container = document.getElementById("memoryContainer")
 
+if(!container) return
+
 container.innerHTML=""
 
 data.forEach(memory=>{
@@ -128,52 +130,6 @@ let card = document.createElement("div")
 
 card.className="memory-card"
 
-card.innerHTML=`
-<img src="${memory.image}" onclick="openViewer('${memory.image}')">
-<p><b>${memory.date}</b></p>
-<p>${memory.text}</p>
-`
-
-container.appendChild(card)
-
-})
-
-}
-
-
-
-// IMAGE VIEWER
-function openViewer(src){
-
-document.getElementById("viewerImage").src = src
-document.getElementById("imageViewer").style.display="flex"
-
-}
-
-function closeViewer(){
-
-document.getElementById("imageViewer").style.display="none"
-
-}
-
-
-
-// ENTER KEY LOGIN
-document.addEventListener("DOMContentLoaded",()=>{
-
-let input=document.getElementById("passwordInput")
-
-if(input){
-input.addEventListener("keypress",(e)=>{
-if(e.key==="Enter"){
-checkPassword()
-}
-})
-}
-
-loadMemories()
-
-})
 card.innerHTML=`
 
 <img src="${memory.image}" onclick="openViewer('${memory.image}')">
@@ -190,18 +146,51 @@ card.innerHTML=`
 
 </div>
 
-`async function editImage(id){
+`
+
+container.appendChild(card)
+
+})
+
+}
+
+
+
+// DELETE MEMORY
+async function deleteMemory(id){
+
+let confirmDelete = confirm("Are you sure you want to delete this memory?")
+
+if(!confirmDelete) return
+
+let { error } = await supabaseClient
+.from("memories")
+.delete()
+.eq("id",id)
+
+if(error){
+alert("Delete error")
+return
+}
+
+loadMemories()
+
+}
+
+
+
+// EDIT IMAGE
+async function editImage(id){
 
 let input = document.createElement("input")
 input.type = "file"
 input.accept = "image/*"
 
-input.onchange = async () => {
+input.onchange = async ()=>{
 
 let file = input.files[0]
 
 let formData = new FormData()
-
 formData.append("file", file)
 formData.append("upload_preset", "memory_upload")
 
@@ -229,3 +218,71 @@ loadMemories()
 input.click()
 
 }
+
+
+
+// IMAGE VIEWER
+function openViewer(src){
+
+let viewer = document.getElementById("imageViewer")
+let img = document.getElementById("viewerImage")
+
+img.src = src
+viewer.style.display="flex"
+
+}
+
+function closeViewer(){
+
+document.getElementById("imageViewer").style.display="none"
+
+}
+
+
+
+// HEART EFFECT
+function createHearts(){
+
+let container = document.getElementById("heartContainer")
+
+if(!container) return
+
+for(let i=0;i<25;i++){
+
+let heart = document.createElement("div")
+
+heart.className="heart"
+heart.innerHTML="❤"
+
+heart.style.left=Math.random()*100+"vw"
+heart.style.bottom="0px"
+heart.style.fontSize=(Math.random()*20+15)+"px"
+
+container.appendChild(heart)
+
+setTimeout(()=>{
+heart.remove()
+},3000)
+
+}
+
+}
+
+
+
+// ENTER KEY LOGIN
+document.addEventListener("DOMContentLoaded",()=>{
+
+let input = document.getElementById("passwordInput")
+
+if(input){
+input.addEventListener("keypress",(e)=>{
+if(e.key==="Enter"){
+checkPassword()
+}
+})
+}
+
+loadMemories()
+
+})
