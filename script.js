@@ -1,5 +1,5 @@
 ```javascript
-const supabaseUrl = "https://mjgazsuzgcmigsoqfpka.supabase.co"
+const supabaseUrl = "https://mjqazsuzgcmigsoqfpka.supabase.co"
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1qcWF6c3V6Z2NtaWdzb3FmcGthIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MDAxMDEsImV4cCI6MjA4ODk3NjEwMX0.diKc0JKRowJ7LzSQhsS6ZOuAD6xwr8HN62i4jGinOxQ"
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
 
@@ -124,4 +124,5 @@ document.getElementById("imageViewer").style.display="none"
 
 }
 ```
+
 
