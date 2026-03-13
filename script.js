@@ -10,7 +10,7 @@ function checkPassword(){
 
 let pass = document.getElementById("passwordInput").value
 
-if(pass === "1234"){
+if(pass === "Tumpihungry"){
 document.getElementById("lockScreen").style.display="none"
 }
 else{
@@ -18,7 +18,11 @@ alert("Wrong password")
 }
 
 }
-
+document.getElementById("passwordInput").addEventListener("keypress", function(e){
+if(e.key === "Enter"){
+checkPassword()
+}
+})
 
 // CLOUDINARY UPLOAD
 async function uploadImage(){
@@ -160,3 +164,4 @@ heart.remove()
 
 // LOAD MEMORIES WHEN PAGE OPEN
 loadMemories()
+
