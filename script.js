@@ -23,12 +23,12 @@ alert("Wrong password")
 
 
 
-// CLOUDINARY UPLOAD (แก้ให้มือถือเสถียร)
+// UPLOAD IMAGE
 async function uploadImage(){
 
 let fileInput = document.getElementById("imageInput")
 
-if(!fileInput || fileInput.files.length === 0){
+if(!fileInput.files.length){
 alert("กรุณาเลือกรูป")
 return null
 }
@@ -41,23 +41,22 @@ formData.append("upload_preset", "memory_upload")
 
 try{
 
-let res = await fetch("https://api.cloudinary.com/v1_1/dtzmwztuj/image/upload",{
+let res = await fetch(
+"https://api.cloudinary.com/v1_1/dtzmwztuj/image/upload",
+{
 method:"POST",
 body:formData
-})
-
-if(!res.ok){
-throw new Error("Upload failed")
 }
+)
 
 let data = await res.json()
 
 return data.secure_url
 
-}catch(error){
+}catch(err){
 
-console.log("Upload error:",error)
-alert("Upload image error")
+console.log(err)
+alert("Upload error")
 return null
 
 }
@@ -79,26 +78,22 @@ return
 
 let imageURL = await uploadImage()
 
-if(!imageURL){
-return
-}
+if(!imageURL) return
 
 let { error } = await supabaseClient
 .from("memories")
 .insert([
 {
-date: date,
-text: text,
-image: imageURL
+date:date,
+text:text,
+image:imageURL
 }
 ])
 
 if(error){
-
 console.log(error)
-alert("Save memory error")
+alert("Save error")
 return
-
 }
 
 loadMemories()
@@ -119,21 +114,19 @@ let { data, error } = await supabaseClient
 .order("date",{ascending:false})
 
 if(error){
-console.log("Load error:",error)
+console.log(error)
 return
 }
 
 let container = document.getElementById("memoryContainer")
 
-if(!container) return
-
 container.innerHTML=""
 
 data.forEach(memory=>{
 
-let card=document.createElement("div")
+let card = document.createElement("div")
 
-card.className="memory-card fade-in"
+card.className="memory-card"
 
 card.innerHTML=`
 <img src="${memory.image}" onclick="openViewer('${memory.image}')">
@@ -152,65 +145,26 @@ container.appendChild(card)
 // IMAGE VIEWER
 function openViewer(src){
 
-let viewer=document.getElementById("imageViewer")
-let img=document.getElementById("viewerImage")
-
-if(!viewer || !img) return
-
-img.src=src
-viewer.style.display="flex"
+document.getElementById("viewerImage").src = src
+document.getElementById("imageViewer").style.display="flex"
 
 }
 
 function closeViewer(){
 
-let viewer=document.getElementById("imageViewer")
-
-if(viewer){
-viewer.style.display="none"
-}
-
-}
-
-
-
-// HEART EFFECT
-function createHearts(){
-
-let container=document.getElementById("heartContainer")
-
-if(!container) return
-
-for(let i=0;i<25;i++){
-
-let heart=document.createElement("div")
-
-heart.className="heart"
-heart.innerHTML="❤"
-
-heart.style.left=Math.random()*100+"vw"
-heart.style.bottom="0px"
-heart.style.fontSize=(Math.random()*20+15)+"px"
-
-container.appendChild(heart)
-
-setTimeout(()=>{
-heart.remove()
-},3000)
-
-}
+document.getElementById("imageViewer").style.display="none"
 
 }
 
 
 
 // ENTER KEY LOGIN
-document.addEventListener("DOMContentLoaded",function(){
+document.addEventListener("DOMContentLoaded",()=>{
 
 let input=document.getElementById("passwordInput")
 
 if(input){
-input.addEventListener("keypress",function(e){
+input.addEventListener("keypress",(e)=>{
 if(e.key==="Enter"){
 checkPassword()
 }
