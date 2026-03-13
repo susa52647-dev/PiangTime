@@ -23,18 +23,19 @@ alert("Wrong password")
 
 
 
-// CLOUDINARY UPLOAD
+// CLOUDINARY UPLOAD (แก้ให้มือถือเสถียร)
 async function uploadImage(){
 
-let file = document.getElementById("imageInput").files[0]
+let fileInput = document.getElementById("imageInput")
 
-if(!file){
+if(!fileInput || fileInput.files.length === 0){
 alert("กรุณาเลือกรูป")
 return null
 }
 
-let formData = new FormData()
+let file = fileInput.files[0]
 
+let formData = new FormData()
 formData.append("file", file)
 formData.append("upload_preset", "memory_upload")
 
@@ -44,6 +45,10 @@ let res = await fetch("https://api.cloudinary.com/v1_1/dtzmwztuj/image/upload",{
 method:"POST",
 body:formData
 })
+
+if(!res.ok){
+throw new Error("Upload failed")
+}
 
 let data = await res.json()
 
@@ -120,6 +125,8 @@ return
 
 let container = document.getElementById("memoryContainer")
 
+if(!container) return
+
 container.innerHTML=""
 
 data.forEach(memory=>{
@@ -146,18 +153,22 @@ container.appendChild(card)
 function openViewer(src){
 
 let viewer=document.getElementById("imageViewer")
-
 let img=document.getElementById("viewerImage")
 
-img.src=src
+if(!viewer || !img) return
 
+img.src=src
 viewer.style.display="flex"
 
 }
 
 function closeViewer(){
 
-document.getElementById("imageViewer").style.display="none"
+let viewer=document.getElementById("imageViewer")
+
+if(viewer){
+viewer.style.display="none"
+}
 
 }
 
@@ -168,12 +179,13 @@ function createHearts(){
 
 let container=document.getElementById("heartContainer")
 
+if(!container) return
+
 for(let i=0;i<25;i++){
 
 let heart=document.createElement("div")
 
 heart.className="heart"
-
 heart.innerHTML="❤"
 
 heart.style.left=Math.random()*100+"vw"
