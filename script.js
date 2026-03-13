@@ -22,7 +22,7 @@ function checkPassword(){
 
 const pass = document.getElementById("passwordInput").value
 
-if(pass === "1234"){
+if(pass === "Tumpihungry"){
     document.getElementById("lockScreen").style.display = "none"
     loadMemories()
 }else{
@@ -213,3 +213,4 @@ function closeViewer(){
 document.getElementById("imageViewer").style.display = "none"
 }
 ```
+
