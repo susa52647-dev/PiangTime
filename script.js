@@ -4,13 +4,15 @@ const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 
 const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
 
+let editingId = null
+
 
 // PASSWORD
-function checkPassword() {
+function checkPassword(){
 
-const pass = document.getElementById("passwordInput").value
+const pass=document.getElementById("passwordInput").value
 
-if(pass === "1234"){
+if(pass==="1234"){
 document.getElementById("lockScreen").style.display="none"
 loadMemories()
 }else{
@@ -20,13 +22,15 @@ alert("Wrong password")
 }
 
 
+
 // LOAD MEMORIES
 async function loadMemories(){
 
-const container = document.getElementById("memoryContainer")
+const container=document.getElementById("memoryContainer")
+
 container.innerHTML="Loading..."
 
-const { data, error } = await supabase
+const {data,error}=await supabase
 .from("memories")
 .select("*")
 .order("date",{ascending:false})
@@ -38,10 +42,11 @@ return
 
 container.innerHTML=""
 
-data.forEach(memory => {
+data.forEach(memory=>{
 
 const card=document.createElement("div")
-card.className="memory-card"
+
+card.className="memory-card fade-in"
 
 card.innerHTML=`
 
@@ -50,6 +55,8 @@ card.innerHTML=`
 <h3>${memory.date}</h3>
 
 <p>${memory.text}</p>
+
+<button onclick="editMemory(${memory.id})">Edit</button>
 
 <button onclick="deleteMemory(${memory.id})">Delete</button>
 
@@ -62,6 +69,7 @@ container.appendChild(card)
 }
 
 
+
 // ADD MEMORY
 async function addMemory(){
 
@@ -69,35 +77,75 @@ const date=document.getElementById("dateInput").value
 const text=document.getElementById("textInput").value
 const file=document.getElementById("imageInput").files[0]
 
-if(!date || !text || !file){
+if(!date || !text){
 alert("Please fill everything")
 return
 }
+
+let imageBase64 = null
+
+if(file){
 
 const reader=new FileReader()
 
 reader.onload=async function(){
 
-const imageBase64=reader.result
+imageBase64=reader.result
 
-const { error } = await supabase
+saveMemory(date,text,imageBase64)
+
+}
+
+reader.readAsDataURL(file)
+
+}else{
+
+saveMemory(date,text,null)
+
+}
+
+}
+
+
+
+async function saveMemory(date,text,image){
+
+if(editingId){
+
+const updateData={
+date:date,
+text:text
+}
+
+if(image){
+updateData.image=image
+}
+
+await supabase
+.from("memories")
+.update(updateData)
+.eq("id",editingId)
+
+editingId=null
+alert("Memory updated")
+
+}else{
+
+await supabase
 .from("memories")
 .insert([
 {
 date:date,
 text:text,
-image:imageBase64
+image:image
 }
 ])
 
-if(error){
-alert("Save error")
-console.log(error)
-return
-}
-
 alert("Saved!")
 
+}
+
+document.getElementById("dateInput").value=""
 document.getElementById("textInput").value=""
 document.getElementById("imageInput").value=""
 
@@ -105,31 +153,51 @@ loadMemories()
 
 }
 
-reader.readAsDataURL(file)
+
+
+// EDIT MEMORY
+async function editMemory(id){
+
+const {data}=await supabase
+.from("memories")
+.select("*")
+.eq("id",id)
+.single()
+
+document.getElementById("dateInput").value=data.date
+document.getElementById("textInput").value=data.text
+
+editingId=id
+
+window.scrollTo({
+top:document.getElementById("add").offsetTop,
+behavior:"smooth"
+})
 
 }
+
 
 
 // DELETE MEMORY
 async function deleteMemory(id){
 
-const confirmDelete = confirm("Delete this memory?")
+const confirmDelete = confirm("Are you sure you want to delete this memory?")
 
 if(!confirmDelete) return
 
-const { error } = await supabase
+const confirmAgain = confirm("This cannot be undone. Delete?")
+
+if(!confirmAgain) return
+
+await supabase
 .from("memories")
 .delete()
 .eq("id",id)
 
-if(error){
-alert("Delete error")
-return
-}
-
 loadMemories()
 
 }
+
 
 
 // IMAGE VIEWER
@@ -147,32 +215,22 @@ document.getElementById("imageViewer").style.display="none"
 }
 
 
+
 // HEART EFFECT
 setInterval(()=>{
 
 const heart=document.createElement("div")
-heart.innerHTML="❤️"
-heart.style.position="fixed"
+
+heart.className="heart"
+heart.innerHTML="❤"
+
 heart.style.left=Math.random()*100+"vw"
-heart.style.top="-20px"
-heart.style.fontSize="20px"
+heart.style.bottom="0px"
 
-document.body.appendChild(heart)
+document.getElementById("heartContainer").appendChild(heart)
 
-let pos=0
-
-const fall=setInterval(()=>{
-
-pos+=3
-heart.style.top=pos+"px"
-
-if(pos>window.innerHeight){
-
-clearInterval(fall)
+setTimeout(()=>{
 heart.remove()
-
-}
-
-},30)
+},3000)
 
 },800)
