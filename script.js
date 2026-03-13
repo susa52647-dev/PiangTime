@@ -174,3 +174,58 @@ checkPassword()
 loadMemories()
 
 })
+card.innerHTML=`
+
+<img src="${memory.image}" onclick="openViewer('${memory.image}')">
+
+<p><b>${memory.date}</b></p>
+
+<p>${memory.text}</p>
+
+<div class="memory-buttons">
+
+<button onclick="deleteMemory('${memory.id}')">Delete</button>
+
+<button onclick="editImage('${memory.id}')">Change Image</button>
+
+</div>
+
+`async function editImage(id){
+
+let input = document.createElement("input")
+input.type = "file"
+input.accept = "image/*"
+
+input.onchange = async () => {
+
+let file = input.files[0]
+
+let formData = new FormData()
+
+formData.append("file", file)
+formData.append("upload_preset", "memory_upload")
+
+let res = await fetch(
+"https://api.cloudinary.com/v1_1/dtzmwztuj/image/upload",
+{
+method:"POST",
+body:formData
+}
+)
+
+let data = await res.json()
+
+let newURL = data.secure_url
+
+await supabaseClient
+.from("memories")
+.update({image:newURL})
+.eq("id",id)
+
+loadMemories()
+
+}
+
+input.click()
+
+}
