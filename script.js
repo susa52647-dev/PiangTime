@@ -63,7 +63,7 @@ card.innerHTML = `
 
 <button onclick="editMemory(${memory.id})">Edit</button>
 <button onclick="deleteMemory(${memory.id})">Delete</button>
-`
+
 
 container.appendChild(card)
 
@@ -170,3 +170,4 @@ document.getElementById("imageViewer").style.display = "none"
 
 }
 ```
+
