@@ -1,6 +1,28 @@
 let memories = JSON.parse(localStorage.getItem("memories")) || []
 let editingIndex = null
+async function uploadImage(){
 
+let file = document.getElementById("imageInput").files[0]
+
+if(!file){
+alert("กรุณาเลือกรูป")
+return
+}
+
+let formData = new FormData()
+
+formData.append("file", file)
+formData.append("upload_preset", "memory_upload")
+
+let res = await fetch("https://api.cloudinary.com/v1_1/dtzmwztuj/image/upload",{
+method:"POST",
+body:formData
+})
+
+let data = await res.json()
+
+return data.secure_url
+}
 function saveMemories(){
 localStorage.setItem("memories", JSON.stringify(memories))
 }
@@ -43,15 +65,26 @@ container.appendChild(card)
 
 }
 
-function addMemory(){
+async function addMemory(){
 
-let date=document.getElementById("dateInput").value
-let text=document.getElementById("textInput").value
-let file=document.getElementById("imageInput").files[0]
+let date = document.getElementById("dateInput").value
+let text = document.getElementById("textInput").value
 
-if(!date || !text){
-alert("Please fill everything")
-return
+let imageURL = await uploadImage()
+
+let container = document.getElementById("memoryContainer")
+
+let card = document.createElement("div")
+card.className="memory-card"
+
+card.innerHTML = `
+<img src="${imageURL}">
+<p><b>${date}</b></p>
+<p>${text}</p>
+`
+
+container.appendChild(card)
+
 }
 
 if(editingIndex !== null){
@@ -228,5 +261,6 @@ heart.remove()
 },3000)
 
 }
+
 
 }
