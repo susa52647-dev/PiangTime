@@ -1,4 +1,4 @@
-const supabaseUrl = "https://mjgazsuzgcmigsoqfpka.supabase.co"
+const supabaseUrl = "https://mjqazsuzgcmigsoqfpka.supabase.co"
 const supabaseKey = "sb_publishable_OygNxwvThA3Bw1EATT7VRg_CkJ0KFJp"
 
 const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey)
@@ -203,3 +203,4 @@ checkPassword()
 loadMemories()
 
 })
+
