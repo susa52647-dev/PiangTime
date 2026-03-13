@@ -1,15 +1,23 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Memory Web</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Memory Web</title>
+
+<link rel="stylesheet" href="style.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
 
 </head>
+
+
 <body>
-    <div id="lockScreen">
+
+<!-- LOCK SCREEN -->
+<div id="lockScreen">
 
 <div class="lock-box">
 
@@ -22,31 +30,52 @@
 </div>
 
 </div>
-    <header>
-        <h1>Piang Time</h1>
-        <nav>
-            <a href="#home">Home</a>
-            <a href="#memories">Memories</a>
-            <a href="#add">Add Memory</a>
-            <a href="#message">Message</a>
-        </nav>
-    </header>
-    <section class="hero" id="home">
-        <div class="hero-text">
-            <h1>You are my world</h1>
-            <p>Every time I’m with you, I feel truly happy. Being with you makes me feel safe, warm, and at peace like nowhere else</p>
-        </div>
 
-    </section>
-    <section class="memories" id="memories">
 
-<h2>Our Memories</h2>
+<!-- HEADER -->
+<header>
 
-<div class="memory-container" id="memoryContainer">
-    </div>
+<h1>Piang Time</h1>
+
+<nav>
+
+<a href="#home">Home</a>
+<a href="#memories">Memories</a>
+<a href="#add">Add Memory</a>
+<a href="#message">Message</a>
+
+</nav>
+
+</header>
+
+
+<!-- HERO -->
+<section class="hero" id="home">
+
+<div class="hero-text">
+
+<h1>You are my world</h1>
+
+<p>
+Every time I’m with you, I feel truly happy. Being with you makes me feel safe, warm, and at peace like nowhere else
+</p>
+
+</div>
 
 </section>
 
+
+<!-- MEMORIES -->
+<section class="memories" id="memories">
+
+<h2>Our Memories</h2>
+
+<div class="memory-container" id="memoryContainer"></div>
+
+</section>
+
+
+<!-- ADD MEMORY -->
 <section class="add-memory" id="add">
 
 <h2>Add Memory</h2>
@@ -62,7 +91,10 @@
 <button onclick="addMemory()">Save Memory</button>
 
 </section>
-    <section class="message" id="message">
+
+
+<!-- MESSAGE -->
+<section class="message" id="message">
 
 <h2>Piece of you</h2>
 
@@ -71,15 +103,26 @@ Let me take care of you with all my heart, just like you always do for me.
 </p>
 
 </section>
-    <div id="imageViewer" onclick="closeViewer()">
 
-<img id="viewerImage">
 
-    </div>
-    <div id="heartContainer"></div>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-    <script src="script.js"></script>
+<!-- IMAGE VIEWER -->
+<div id="imageViewer" onclick="closeViewer()">
+
+<img id="viewerImage" alt="memory image">
+
+</div>
+
+
+<!-- HEART EFFECT -->
+<div id="heartContainer"></div>
+
+
+<!-- SUPABASE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- SCRIPT -->
+<script src="script.js"></script>
+
+
 </body>
-
 </html>
-
