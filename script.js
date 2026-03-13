@@ -2,13 +2,14 @@ const supabaseUrl = "https://mjgazsuzgcmigsoqfpka.supabase.co"
 
 const supabaseKey = "sb_publishable_OygNxwvThA3Bw1EATT7VRg_CkJ0KFJp"
 
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
+const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey)
+
 
 
 // PASSWORD
 function checkPassword(){
 
-let pass = document.getElementById("passwordInput").value
+const pass = document.getElementById("passwordInput").value.trim()
 
 if(pass === "Tumpihungry"){
 document.getElementById("lockScreen").style.display="none"
@@ -18,11 +19,8 @@ alert("Wrong password")
 }
 
 }
-document.getElementById("passwordInput").addEventListener("keypress", function(e){
-if(e.key === "Enter"){
-checkPassword()
-}
-})
+
+
 
 // CLOUDINARY UPLOAD
 async function uploadImage(){
@@ -31,7 +29,7 @@ let file = document.getElementById("imageInput").files[0]
 
 if(!file){
 alert("กรุณาเลือกรูป")
-return
+return null
 }
 
 let formData = new FormData()
@@ -47,7 +45,9 @@ body:formData
 let data = await res.json()
 
 return data.secure_url
+
 }
+
 
 
 // ADD MEMORY
@@ -63,45 +63,53 @@ return
 
 let imageURL = await uploadImage()
 
-// save to Supabase
-await supabase
+if(!imageURL){
+return
+}
+
+await supabaseClient
 .from("memories")
 .insert([
 {
-date: date,
-text: text,
-image: imageURL
+date:date,
+text:text,
+image:imageURL
 }
 ])
 
 loadMemories()
 
-// clear input
 document.getElementById("textInput").value=""
 document.getElementById("imageInput").value=""
 
 }
 
 
-// LOAD MEMORIES FROM DATABASE
+
+// LOAD MEMORIES
 async function loadMemories(){
 
-let { data } = await supabase
+let { data, error } = await supabaseClient
 .from("memories")
 .select("*")
-.order("date", { ascending: false })
+.order("date",{ascending:false})
+
+if(error){
+console.log(error)
+return
+}
 
 let container = document.getElementById("memoryContainer")
 
 container.innerHTML=""
 
-data.forEach(memory => {
+data.forEach(memory=>{
 
-let card = document.createElement("div")
+let card=document.createElement("div")
 
 card.className="memory-card fade-in"
 
-card.innerHTML = `
+card.innerHTML=`
 <img src="${memory.image}" onclick="openViewer('${memory.image}')">
 <p><b>${memory.date}</b></p>
 <p>${memory.text}</p>
@@ -114,14 +122,15 @@ container.appendChild(card)
 }
 
 
+
 // IMAGE VIEWER
 function openViewer(src){
 
-let viewer = document.getElementById("imageViewer")
+let viewer=document.getElementById("imageViewer")
 
-let img = document.getElementById("viewerImage")
+let img=document.getElementById("viewerImage")
 
-img.src = src
+img.src=src
 
 viewer.style.display="flex"
 
@@ -134,10 +143,11 @@ document.getElementById("imageViewer").style.display="none"
 }
 
 
+
 // HEART EFFECT
 function createHearts(){
 
-let container = document.getElementById("heartContainer")
+let container=document.getElementById("heartContainer")
 
 for(let i=0;i<25;i++){
 
@@ -162,6 +172,20 @@ heart.remove()
 }
 
 
-// LOAD MEMORIES WHEN PAGE OPEN
+
+// ENTER KEY LOGIN
+document.addEventListener("DOMContentLoaded",function(){
+
+let input=document.getElementById("passwordInput")
+
+if(input){
+input.addEventListener("keypress",function(e){
+if(e.key==="Enter"){
+checkPassword()
+}
+})
+}
+
 loadMemories()
 
+})
