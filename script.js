@@ -1,16 +1,17 @@
-let memories = JSON.parse(localStorage.getItem("memories")) || []
 const supabaseUrl = "https://mjgazsuzgcmigsoqfpka.supabase.co"
 
 const supabaseKey = "sb_publishable_OygNxwvThA3Bw1EATT7VRg_CkJ0KFJp"
 
-const supabase = supabase.createClient(supabaseUrl, supabaseKey)
+const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
+
+
 // PASSWORD
 function checkPassword(){
 
 let pass = document.getElementById("passwordInput").value
 
 if(pass === "1234"){
-document.getElementById("lockScreen").style.display = "none"
+document.getElementById("lockScreen").style.display="none"
 }
 else{
 alert("Wrong password")
@@ -45,12 +46,6 @@ return data.secure_url
 }
 
 
-// SAVE MEMORY
-function saveMemories(){
-localStorage.setItem("memories", JSON.stringify(memories))
-}
-
-
 // ADD MEMORY
 async function addMemory(){
 
@@ -64,17 +59,18 @@ return
 
 let imageURL = await uploadImage()
 
-let memory = {
+// save to Supabase
+await supabase
+.from("memories")
+.insert([
+{
 date: date,
 text: text,
 image: imageURL
 }
+])
 
-memories.push(memory)
-
-saveMemories()
-
-renderMemories()
+loadMemories()
 
 // clear input
 document.getElementById("textInput").value=""
@@ -83,16 +79,22 @@ document.getElementById("imageInput").value=""
 }
 
 
-// SHOW MEMORIES
-function renderMemories(){
+// LOAD MEMORIES FROM DATABASE
+async function loadMemories(){
+
+let { data } = await supabase
+.from("memories")
+.select("*")
+.order("date", { ascending: false })
 
 let container = document.getElementById("memoryContainer")
 
 container.innerHTML=""
 
-memories.forEach(memory => {
+data.forEach(memory => {
 
 let card = document.createElement("div")
+
 card.className="memory-card fade-in"
 
 card.innerHTML = `
@@ -135,15 +137,15 @@ let container = document.getElementById("heartContainer")
 
 for(let i=0;i<25;i++){
 
-let heart = document.createElement("div")
+let heart=document.createElement("div")
 
 heart.className="heart"
 
 heart.innerHTML="❤"
 
-heart.style.left = Math.random()*100 + "vw"
-heart.style.bottom = "0px"
-heart.style.fontSize = (Math.random()*20+15) + "px"
+heart.style.left=Math.random()*100+"vw"
+heart.style.bottom="0px"
+heart.style.fontSize=(Math.random()*20+15)+"px"
 
 container.appendChild(heart)
 
@@ -157,5 +159,4 @@ heart.remove()
 
 
 // LOAD MEMORIES WHEN PAGE OPEN
-renderMemories()
-
+loadMemories()
