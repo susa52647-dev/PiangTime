@@ -1,111 +1,62 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Memory Web</title>
-
-<link rel="stylesheet" href="style.css">
-
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Web</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
 </head>
-
 <body>
 
-<!-- LOCK SCREEN -->
 <div id="lockScreen">
-<div class="lock-box">
-
-<h2>Enter Password</h2>
-
-<input type="password" id="passwordInput" placeholder="Password">
-<button onclick="checkPassword()">Enter</button>
-
-</div>
+    <div class="lock-box">
+        <h2>Enter Password</h2>
+        <input type="password" id="passwordInput" placeholder="Password">
+        <button onclick="checkPassword()">Enter</button>
+    </div>
 </div>
 
-<!-- HEADER -->
 <header>
-
-<h1>Piang Time</h1>
-
-<nav>
-<a href="#home">Home</a>
-<a href="#memories">Memories</a>
-<a href="#add">Add Memory</a>
-</nav>
-
+    <h1>Piang Time</h1>
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#memories">Memories</a>
+        <a href="#add">Add Memory</a>
+    </nav>
 </header>
 
-
-<!-- HERO -->
 <section class="hero" id="home">
-
-<div class="hero-text">
-
-<h1>You are my world</h1>
-
-<p>
-Every time I’m with you, I feel truly happy. Being with you makes me feel safe and at peace like nowhere else
-</p>
-
-</div>
-
+    <div class="hero-text">
+        <h1>You are my world</h1>
+        <p>Every time I’m with you, I feel truly happy. Being with you makes me feel safe and at peace like nowhere else.</p> [cite: 2]
+    </div>
 </section>
 
-
-<!-- MEMORIES -->
 <section class="memories" id="memories">
-
-<h2>Our Memories</h2>
-
-<div class="memory-container" id="memoryContainer"></div>
-
+    <h2>Our Memories</h2>
+    <div class="memory-container" id="memoryContainer"></div>
 </section>
 
-
-<!-- ADD MEMORY -->
 <section class="add-memory" id="add">
-
-<h2>Add Memory</h2>
-
-<input type="date" id="dateInput">
-
-<input type="file" id="imageInput" accept="image/*">
-
-<textarea id="textInput" placeholder="Write your memory..."></textarea>
-
-<br><br>
-
-<button onclick="addMemory()">Save Memory</button>
-
+    <h2>Add Memory</h2>
+    <input type="date" id="dateInput">
+    <input type="file" id="imageInput" accept="image/*">
+    <textarea id="textInput" placeholder="Write your memory..."></textarea>
+    <br><br>
+    <button onclick="addMemory()">Save Memory</button>
 </section>
 
-
-<!-- MESSAGE -->
 <section class="message" id="message">
-
-<h2>Piece of you</h2>
-
-<p>
-Let me take care of you with all my heart, just like you always do for me.
-</p>
-
+    <h2>Piece of you</h2>
+    <p>Let me take care of you with all my heart, just like you always do for me.</p> [cite: 3]
 </section>
 
-
-<!-- IMAGE VIEWER -->
 <div id="imageViewer" onclick="closeViewer()">
-<img id="viewerImage" alt="memory image">
+    <img id="viewerImage" alt="memory image">
 </div>
 
-
-<!-- HEART EFFECT -->
 <div id="heartContainer"></div>
-
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="script.js"></script>
